@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>𑣲⋆𝐙𝐢𝐧𝐒𝐞𝐚⋆. 𐙚 ̊ - Genshin Service & Gacha Hub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Mitr:wght@300;400;500;600&family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --pastel-blue-bg: #e6f4f8;
+            --pastel-ocean-dark: #2b5b84;
+            --pastel-ocean-mid: #5b92e5;
+            --pastel-sky: #8ec5fc;
+            --gold-5star: #f1c40f;
+            --purple-4star: #9b59b6;
+            --blue-3star: #3498db;
+            --text-main: #2c3e50;
+            --text-sub: #5a738e;
+            --border-radius: 18px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Prompt', 'Mitr', sans-serif; }
+        body { background: linear-gradient(135deg, #e6f0fa 0%, #d5e8f7 100%); color: var(--text-main); min-height: 100vh; padding-bottom: 40px; }
+        .container { max-width: 500px; margin: 0 auto; padding: 15px; }
+
+        .auth-screen { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 85vh; text-align: center; }
+        .auth-card { background: white; padding: 35px 20px; border-radius: 24px; box-shadow: 0 10px 25px rgba(91, 146, 229, 0.15); width: 100%; border: 2px solid #bbe1fa; }
+        .pin-input { width: 180px; text-align: center; font-size: 24px; letter-spacing: 8px; padding: 10px; border: 2px solid var(--pastel-sky); border-radius: 12px; margin: 20px 0; outline: none; }
+
+        header { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); border-radius: var(--border-radius); padding: 15px; border: 1.5px solid #d4e6f1; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
+        .logo-title { font-size: 1.05rem; font-weight: 600; color: var(--pastel-ocean-dark); }
+        .user-badge { background: #eef7fc; padding: 6px 10px; border-radius: 20px; border: 1px solid var(--pastel-sky); font-size: 0.8rem; color: var(--pastel-ocean-dark); }
+
+        .nav-tabs { display: flex; gap: 8px; margin-bottom: 15px; }
+        .tab-btn { flex: 1; padding: 10px 4px; border: none; background: white; border-radius: 12px; color: var(--text-sub); font-weight: 500; cursor: pointer; border: 1px solid #d4e6f1; transition: all 0.2s; font-size: 0.8rem; }
+        .tab-btn.active { background: var(--pastel-ocean-mid); color: white; border-color: var(--pastel-ocean-mid); box-shadow: 0 4px 10px rgba(91, 146, 229, 0.3); }
+
+        .card { background: white; border-radius: var(--border-radius); padding: 18px; border: 1.5px solid #d4e6f1; box-shadow: 0 5px 20px rgba(0,0,0,0.02); margin-bottom: 15px; }
+        .banner-box { width: 100%; height: 160px; background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%); border-radius: 14px; display: flex; align-items: center; justify-content: center; color: var(--pastel-ocean-dark); font-weight: 600; margin-bottom: 15px; text-align: center; border: 2px dashed #8ec5fc; }
+
+        .btn { width: 100%; padding: 12px; border: none; border-radius: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; position: relative; overflow: hidden; }
+        .btn-aurora { background: linear-gradient(135deg, #8ec5fc 0%, #e0c3fc 100%); color: #2c3e50; margin-bottom: 10px; box-shadow: 0 4px 15px rgba(142, 197, 252, 0.4); }
+        .btn-aurora:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(142, 197, 252, 0.7); }
+        .btn-aurora:active { transform: scale(0.97); }
+
+        .btn-surge { background: linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%); color: #2c3e50; box-shadow: 0 4px 15px rgba(251, 194, 235, 0.4); }
+        .btn-surge:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(251, 194, 235, 0.7); }
+        .btn-surge:active { transform: scale(0.97); }
+
+        .chest-game { display: flex; justify-content: space-around; margin: 20px 0; }
+        .chest-item { width: 80px; height: 80px; background: #eef7fc; border: 2px solid var(--pastel-sky); border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; cursor: pointer; transition: all 0.2s; }
+        .chest-item:hover { transform: translateY(-5px) scale(1.05); background: #d5e8f7; }
+
+        .modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(5px); z-index: 100; justify-content: center; align-items: center; }
+        .modal-content { background: white; padding: 25px; border-radius: 20px; width: 90%; max-width: 400px; text-align: center; max-height: 80vh; overflow-y: auto; }
+
+        .result-item { padding: 10px; margin: 8px 0; border-radius: 10px; font-weight: 500; font-size: 0.9rem; text-align: left; }
+        .res-5 { background: #fffde7; border: 1.5px solid var(--gold-5star); color: #b7950b; }
+        .res-4 { background: #f5eeed; border: 1.5px solid var(--purple-4star); color: #76448a; }
+        .res-3 { background: #ebf5fb; border: 1.5px solid var(--blue-3star); color: #1f618d; }
+
+        .input-group { margin-bottom: 12px; text-align: left; }
+        .input-group label { display: block; font-size: 0.8rem; color: var(--text-sub); margin-bottom: 4px; }
+        .input-group input { width: 100%; padding: 8px 12px; border: 1.5px solid #d4e6f1; border-radius: 10px; outline: none; }
+
+        .summon-overlay { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(10, 25, 45, 0.95); z-index: 999; flex-direction: column; justify-content: center; align-items: center; overflow: hidden; }
+        .summon-beam { width: 15px; height: 100vh; position: absolute; filter: blur(15px); animation: beamPulse 1s infinite alternate; }
+        .gold-beam { background: var(--gold-5star); box-shadow: 0 0 50px var(--gold-5star), 0 0 100px var(--gold-5star); }
+        .purple-beam { background: var(--purple-4star); box-shadow: 0 0 50px var(--purple-4star), 0 0 100px var(--purple-4star); }
+        .blue-beam { background: var(--blue-3star); box-shadow: 0 0 50px var(--blue-3star), 0 0 100px var(--blue-3star); }
+        @keyframes beamPulse { 0% { transform: scaleX(1); opacity: 0.8; } 100% { transform: scaleX(2.5); opacity: 1; } }
+
+        .shooting-stars { position: absolute; width: 100%; height: 100%; transform: rotate(-45deg); pointer-events: none; }
+        .star { position: absolute; width: 100px; height: 2px; background: linear-gradient(90deg, #fff, transparent); animation: shoot 1.5s infinite linear; }
+        .s1 { top: 20%; left: 10%; animation-delay: 0.1s; }
+        .s2 { top: 40%; left: 30%; animation-delay: 0.4s; }
+        .s3 { top: 60%; left: 50%; animation-delay: 0.7s; }
+        .s4 { top: 80%; left: 20%; animation-delay: 0.3s; }
+        .s5 { top: 30%; left: 70%; animation-delay: 0.9s; }
+        @keyframes shoot { 0% { transform: translateX(-200px); opacity: 0; } 50% { opacity: 1; } 100% { transform: translateX(600px); opacity: 0; } }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div id="authScreen" class="auth-screen">
+        <div class="auth-card">
+            <h2 style="color: var(--pastel-ocean-dark);">𑣲⋆𝐙𝐢𝐧𝐒𝐞𝐚⋆. 𐙚 ̊</h2>
+            <p style="font-size: 0.85rem; color: var(--text-sub); margin-top: 8px;">กรอกรหัสผ่าน 4 หลัก เพื่อเข้าใช้งาน</p>
+            <input type="password" id="pinInput" class="pin-input" maxlength="4" placeholder="••••">
+            <button class="btn btn-aurora" onclick="login()">เข้าสู่ระบบ ✦</button>
+        </div>
+    </div>
+
+    <div id="mainApp" style="display: none;">
+        <header>
+            <div>
+                <div class="logo-title">𑣲⋆𝐙𝐢𝐧𝐒𝐞𝐚⋆. 𐙚 ̊</div>
+                <div style="font-size: 0.65rem; color: var(--text-sub);">
+                    <span id="userNameDisplay">ลูกค้า</span> (<b id="userRayDisplay">0</b> Ray)
+                </div>
+            </div>
+            <div>
+                <span class="user-badge" onclick="switchTab('gacha', document.querySelector('.tab-btn'))" style="cursor:pointer;">ตู้กาชา</span>
+                <button onclick="logout()" style="background: none; border: none; color: #e74c3c; font-size: 0.7rem; cursor: pointer; text-decoration: underline; margin-left: 5px;">[ ออก ]</button>
+            </div>
+        </header>
+
+        <div class="nav-tabs">
+            <button class="tab-btn active" onclick="switchTab('gacha', this)">ตู้กาชา</button>
+            <button class="tab-btn" onclick="switchTab('minigame', this)">มินิเกม</button>
+            <button class="tab-btn" onclick="switchTab('history', this)">ประวัติ</button>
+            <button id="adminTabBtn" class="tab-btn" style="display:none; background:#ffeaa7;" onclick="switchTab('admin', this)">หลังบ้าน</button>
+        </div>
+
+        <div id="gachaTab" class="tab-content">
+            <div class="card">
+                <div class="banner-box">
+                    [ ป้ายตู้กาชา 𑣲⋆𝐙𝐢𝐧𝐒𝐞𝐚⋆. ]<br>
+                    <span style="font-size: 0.8rem; font-weight: normal; color: #4a5568;">(สุ่มลุ้นรับ พรแห่งดวงจันทร์ & BP ฟรี)</span>
+                </div>
+                <div style="font-size: 0.85rem; color: var(--text-sub); margin-bottom: 15px; text-align: center;">
+                    ใช้ 20 Little Ray ต่อการอธิษฐาน 1 ครั้ง<br>
+                    <span style="font-size:0.75rem; color: var(--pastel-ocean-mid);">การันตี 5★ ทุกๆ 100 ครั้ง (สะสมแล้ว: <b id="pityCount">0</b>/100)</span>
+                </div>
+                <button class="btn btn-aurora" onclick="rollGacha(1)">อธิษฐาน 1 ครั้ง (20 Ray)</button>
+                <button class="btn btn-surge" onclick="rollGacha(10)">อธิษฐาน 10 ครั้ง (200 Ray)</button>
+            </div>
+        </div>
+
+        <div id="minigameTab" class="tab-content" style="display:none;">
+            <div class="card" style="text-align: center;">
+                <h3 style="color: var(--pastel-ocean-dark); font-size: 1rem;">✧ ไขกล่องสมบัติทะเลพาสเทล ✧</h3>
+                <p style="font-size: 0.8rem; color: var(--text-sub); margin: 8px 0;">เลือกกล่องสมบัติ 1 ใบเพื่อรับ Little Ray ฟรี! (เล่นได้วันละ 1 ครั้ง)</p>
+                <div class="chest-game">
+                    <div class="chest-item" onclick="playChest(1)">✦</div>
+                    <div class="chest-item" onclick="playChest(2)">✧</div>
+                    <div class="chest-item" onclick="playChest(3)">𐙚</div>
+                </div>
+                <div id="chestStatus" style="font-size: 0.85rem; color: var(--pastel-ocean-mid); margin-top: 10px;"></div>
+            </div>
+        </div>
+
+        <div id="historyTab" class="tab-content" style="display:none;">
+            <div class="card">
+                <h3 style="font-size: 0.95rem; color: var(--pastel-ocean-dark); margin-bottom: 10px;">ข้อมูลและประวัติการใช้บริการ</h3>
+                <div style="font-size: 0.85rem; line-height: 1.8;">
+                    จำนวนครั้งที่เคยสั่งซื้อ: <b id="orderCountDisplay">0</b> ครั้ง<br>
+                    ยอดใช้บริการสะสมรวม: <b id="totalSpendDisplay">0</b> บาท<br>
+                </div>
+                <hr style="border: none; border-top: 1px solid #eef7fc; margin: 12px 0;">
+                <h4 style="font-size: 0.85rem; color: var(--pastel-ocean-dark); margin-bottom: 8px;">ประวัติการสุ่มรางวัล</h4>
+                <div id="historyList" style="font-size: 0.8rem; color: var(--text-sub);">ยังไม่มีประวัติการสุ่ม</div>
+            </div>
+        </div>
+
+        <div id="adminTab" class="tab-content" style="display:none;">
+            <div class="card">
+                <h3 style="font-size: 0.95rem; color: #d35400; margin-bottom: 10px;">จัดการข้อมูลลูกค้า (แอดมินซิน)</h3>
+                <div class="input-group">
+                    <label>รหัสลูกค้า (4 หลัก)</label>
+                    <input type="text" id="admPin" placeholder="เช่น 1111">
+                </div>
+                <div class="input-group">
+                    <label>ชื่อลูกค้า</label>
+                    <input type="text" id="admName" placeholder="เช่น คุณเมเม่">
+                </div>
+                <div class="input-group">
+                    <label>ปรับ Little Ray (ใส่ตัวเลข)</label>
+                    <input type="number" id="admRay" value="0">
+                </div>
+                <div class="input-group">
+                    <label>เพิ่มจำนวนครั้งสั่งซื้อ (+ครั้ง)</label>
+                    <input type="number" id="admAddOrders" value="1">
+                </div>
+                <div class="input-group">
+                    <label>เพิ่มยอดเงินสั่งซื้อ (+บาท)</label>
+                    <input type="number" id="admAddSpend" value="100">
+                </div>
+                <button class="btn btn-aurora" onclick="saveAdminCustomer()">บันทึกข้อมูลลูกค้า ✦</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="summonAnimation" class="summon-overlay">
+    <div class="shooting-stars">
+        <div class="star s1"></div><div class="star s2"></div><div class="star s3"></div>
+        <div class="star s4"></div><div class="star s5"></div>
+    </div>
+    <div id="summonBeam" class="summon-beam gold-beam"></div>
+    <h2 id="summonText" style="color: white; z-index: 10; font-weight: 600; text-shadow: 0 0 20px rgba(255,255,255,0.8);">กำลังอธิษฐาน...</h2>
+</div>
+
+<div id="resultModal" class="modal">
+    <div class="modal-content">
+        <h3 style="color: var(--pastel-ocean-dark); margin-bottom: 15px;">✦ ผลการอธิษฐาน ✦</h3>
+        <div id="modalResultList"></div>
+        <button class="btn btn-aurora" style="margin-top: 15px;" onclick="closeModal()">ตกลง</button>
+    </div>
+</div>
+
+<script>
+    let defaultCustomers = {
+        "1001": { name: "คุณเมเม่", ray: 120, pity: 0, orders: 3, totalSpend: 350, history: [], lastChestDate: "" },
+        "1002": { name: "คุณลูกค้า", ray: 40, pity: 0, orders: 1, totalSpend: 100, history: [], lastChestDate: "" }
+    };
+
+    let customers = JSON.parse(localStorage.getItem('zinsea_customers')) || defaultCustomers;
+    let currentUserPin = localStorage.getItem('zinsea_current_user') || null;
+    let isAdmin = JSON.parse(localStorage.getItem('zinsea_is_admin')) || false;
+
+    window.onload = function() {
+        if (currentUserPin && customers[currentUserPin]) {
+            if (isAdmin) {
+                document.getElementById('adminTabBtn').style.display = 'block';
+            }
+            showApp();
+        }
+    };
+
+    function saveData() {
+        localStorage.setItem('zinsea_customers', JSON.stringify(customers));
+        localStorage.setItem('zinsea_current_user', currentUserPin);
+        localStorage.setItem('zinsea_is_admin', JSON.stringify(isAdmin));
+    }
+
+    function login() {
+        const pin = document.getElementById('pinInput').value.trim();
+        if (pin === "6767") {
+            isAdmin = true;
+            currentUserPin = "1001";
+            document.getElementById('adminTabBtn').style.display = 'block';
+            saveData();
+            showApp();
+        } else if (customers[pin]) {
+            isAdmin = false;
+            currentUserPin = pin;
+            document.getElementById('adminTabBtn').style.display = 'none';
+            saveData();
+            showApp();
+        } else {
+            alert('ไม่พบรหัสลูกค้านี้ กรุณาตรวจสอบรหัสใหม่อีกครั้งครับ');
+        }
+    }
+
+    function logout() {
+        localStorage.removeItem('zinsea_current_user');
+        localStorage.removeItem('zinsea_is_admin');
+        currentUserPin = null;
+        isAdmin = false;
+        document.getElementById('mainApp').style.display = 'none';
+        document.getElementById('authScreen').style.display = 'flex';
+        document.getElementById('pinInput').value = '';
+    }
+
+    function showApp() {
+        document.getElementById('authScreen').style.display = 'none';
+        document.getElementById('mainApp').style.display = 'block';
+        updateUI();
+    }
+
+    function updateUI() {
+        if (!currentUserPin || !customers[currentUserPin]) return;
+        const user = customers[currentUserPin];
+        document.getElementById('userNameDisplay').innerText = user.name;
+        document.getElementById('userRayDisplay').innerText = user.ray;
+        document.getElementById('pityCount').innerText = user.pity;
+        document.getElementById('orderCountDisplay').innerText = user.orders;
+        document.getElementById('totalSpendDisplay').innerText = user.totalSpend;
+
+        const histList = document.getElementById('historyList');
+        if (!user.history || user.history.length === 0) {
+            histList.innerHTML = "ยังไม่มีประวัติการสุ่ม";
+        } else {
+            histList.innerHTML = user.history.map(item => `<div>• ${item}</div>`).join('');
+        }
+    }
+
+    function switchTab(tab, btn) {
+        document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
+        document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+        document.getElementById(tab + 'Tab').style.display = 'block';
+        if (btn) btn.classList.add('active');
+    }
+
+    function rollGacha(times) {
+        const user = customers[currentUserPin];
+        const cost = times * 20;
+
+        if (user.ray < cost) {
+            alert('Little Ray ไม่พอครับ! กรุณาจ้างงานเพิ่มเพื่อสะสมแต้ม');
+            return;
+        }
+
+        user.ray -= cost;
+        let results = [];
+        let highestStar = 3;
+
+        for (let i = 0; i < times; i++) {
+            user.pity++;
+            let rand = Math.random() * 100;
+            let item = "";
+            let star = 3;
+
+            if (user.pity >= 100 || rand < 3) {
+                item = "5★ พรแห่งดวงจันทร์ / BP อัศวิน";
+                user.pity = 0;
+                star = 5;
+            } else if (rand < 30) {
+                item = "4★ ส่วนลด 30 บาท / แถมฟาร์มเควสต์";
+                star = 4;
+            } else {
+                item = "3★ ส่วนลด 10 บาท / คืนแต้มสะสม 5 Ray";
+                star = 3;
+            }
+            results.push({ text: item, star: star });
+            user.history.unshift(item);
+            if (star > highestStar) highestStar = star;
+        }
+
+        saveData();
+        updateUI();
+
+        const overlay = document.getElementById('summonAnimation');
+        const beam = document.getElementById('summonBeam');
+        const text = document.getElementById('summonText');
+
+        overlay.style.display = 'flex';
+        beam.className = "summon-beam " + (highestStar === 5 ? "gold-beam" : highestStar === 4 ? "purple-beam" : "blue-beam");
+        text.innerText = highestStar === 5 ? "✦ อธิษฐานพบแสงสีทอง 5 ดาว! ✦" : highestStar === 4 ? "✧ แสงสีม่วง 4 ดาว! ✧" : "✦ อธิษฐานสำเร็จ! ✦";
+
+        setTimeout(() => {
+            overlay.style.display = 'none';
+            showResults(results);
+        }, 1800);
+    }
+
+    function showResults(results) {
+        const list = document.getElementById('modalResultList');
+        list.innerHTML = results.map(r => `<div class="result-item res-${r.star}">${r.text}</div>`).join('');
+        document.getElementById('resultModal').style.display = 'flex';
+    }
+
+    function closeModal() {
+        document.getElementById('resultModal').style.display = 'none';
+    }
+
+    function playChest(id) {
+        const user = customers[currentUserPin];
+        const today = new Date().toDateString();
+
+        if (user.lastChestDate === today) {
+            document.getElementById('chestStatus').innerText = "คุณได้เปิดกล่องสมบัติประจำวันนี้ไปแล้วครับ";
+            return;
+        }
+
+        const bonus = Math.floor(Math.random() * 3) + 1;
+        user.ray += bonus;
+        user.lastChestDate = today;
+        saveData();
+        updateUI();
+        document.getElementById('chestStatus').innerText = `ยินดีด้วย! คุณได้รับ +${bonus} Little Ray ✦`;
+    }
+
+    function saveAdminCustomer() {
+        const pin = document.getElementById('admPin').value.trim();
+        const name = document.getElementById('admName').value.trim();
+        const ray = parseInt(document.getElementById('admRay').value) || 0;
+        const addOrders = parseInt(document.getElementById('admAddOrders').value) || 0;
+        const addSpend = parseInt(document.getElementById('admAddSpend').value) || 0;
+
+        if (!pin || !name) {
+            alert('กรุณากรอกรหัสและชื่อลูกค้าให้ครบถ้วน');
+            return;
+        }
+
+        if (!customers[pin]) {
+            customers[pin] = { name: name, ray: ray, pity: 0, orders: addOrders, totalSpend: addSpend, history: [], lastChestDate: "" };
+        } else {
+            customers[pin].name = name;
+            customers[pin].ray += ray;
+            customers[pin].orders += addOrders;
+            customers[pin].totalSpend += addSpend;
+        }
+
+        saveData();
+        alert('บันทึกข้อมูลลูกค้าเรียบร้อยแล้ว!');
+        document.getElementById('admPin').value = '';
+        document.getElementById('admName').value = '';
+        updateUI();
+    }
+</script>
+</body>
+</html>
